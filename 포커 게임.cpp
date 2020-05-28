@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define NUM_RANKS 13
+#define NUM_RANKS 14
 #define NUM_SUITS 4
 #define NUM_CARDS 5
 
@@ -17,10 +17,11 @@ int main(void) {
 		read_cards();
 		analyze_hand();
 		printf("\n*****************THE**END*****************\n");
-		printf("RETRY? (Do you want to exit this game, click -1): ");
-		scanf_s(" %d", &retry);
-		printf("\n\n");
+		printf("RETRY?\nYES(1),\t NO(-1):");
+		scanf(" %d", &retry);
 		if (retry == -1)break;
+		else if (retry == 1) { printf("\n\n"); continue; }
+		
 	}
 }
 
@@ -52,7 +53,7 @@ void read_cards(void) { //카드 입력받는 함수
 	while (cards_read < NUM_CARDS) {
 		int check = 0;
 		printf("Enter a card(%d):", cards_read + 1);
-		scanf_s(" %c", &rank_ch); R[cards_read] = rank_ch; //rank를 나타내는 하나의 문자 입력
+		scanf(" %c", &rank_ch); R[cards_read] = rank_ch; //rank를 나타내는 하나의 문자 입력
 		switch (rank_ch) {
 		case 'a': rank = 1; break;
 		case '2': rank = 2; break;
@@ -69,7 +70,7 @@ void read_cards(void) { //카드 입력받는 함수
 		case 'k': rank = 13; break;
 		default: printf("\nUNKNOWN_RANK(Retry)\n\n"); check = 1; break; //잘못입력하면 다시
 		}
-		scanf_s(" %c", &suit_ch); S[cards_read] = suit_ch;
+		scanf(" %c", &suit_ch); S[cards_read] = suit_ch;
 		switch (suit_ch) {
 		case 'c': suit = 0; break;
 		case 'd': suit = 1; break;
@@ -98,18 +99,15 @@ int check_four_cards() {
 }
 
 int check_straight() {
-	int count = 0, tmp = 14;
-	for (int i = 1; i < 5; i++) {
-		count = 0;
-		if (num_in_rank[i] == 1) num_in_rank[tmp] = 1;
-		tmp++;
-	}
-	for (int rank = 1; rank <= NUM_RANKS + 4; rank++) {
-		if (num_in_rank[rank] == 1 && num_in_rank[rank + 4] == 1 && rank <= 13) {
+	int count = 0;
+	if (num_in_rank[1] == 1) num_in_rank[14] = 1;
+	for (int rank = 1; rank <= NUM_RANKS; rank++) {
+		if (num_in_rank[rank] == 1 && num_in_rank[rank + 4] == 1) {
 			count = 2;
 			for (int j = rank + 1; j < rank + 4; j++) {
 				if (num_in_rank[rank] == 1) count++;
 			}
+			break;
 		}
 	}
 	if (count == 5) return 1;
